@@ -64,16 +64,16 @@ public class MainActivity<adapter> extends AppCompatActivity {
 
                 URL url = new URL("http://wwwlab.iit.his.se/brom/kurser/mobilprog/dbservice/admin/getdataasjson.php?type=a18waqje");
 
-                // Create the request to the PHP-service, and open the connection
+
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 
-                // Read the input stream into a String
+
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
-                    // Nothing to do.
+
                     Log.d("a18waqje", "inputStream == null");
                     return null;
                 }
@@ -81,14 +81,12 @@ public class MainActivity<adapter> extends AppCompatActivity {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
+
                     buffer.append(line + "\n");
                 }
 
                 if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
+
                     Log.d("a18waqje", "buffer.length() == 0");
                     return null;
                 }
@@ -96,8 +94,7 @@ public class MainActivity<adapter> extends AppCompatActivity {
                 return jsonStr;
             } catch (Exception e) {
                 Log.e("a18waqje", "IOException:" + e.getMessage());
-                // If the code didn't successfully get the weather data, there's no point in
-                // attempting to parse it.
+
                 return null;
             } finally {
                 if (urlConnection != null) {
@@ -123,40 +120,35 @@ public class MainActivity<adapter> extends AppCompatActivity {
                 Log.d("a18waqje", "Null was received");
             }
 
-            // This code executes after we have received our data. The String object o holds
-            // the un-parsed JSON string or is null if we had an IOException during the fetch.
 
-            // Implement a parsing code that loops through the entire JSON and creates objects
-            // of our newly created Mountain class.
 
-/*
+
             try
             {
                 // For loop
-                JSONArray mountains = new JSONArray(o);
-                Log.d("a18waqje", mountains.get(0).toString());
-                //JSONObject obj =  mountains.getJSONObject(0);
-                //Log.d( "Mountain",obj.getString("ID"));
-                //Log.d( "Mountain",""+mountains.length());
-                //String id = obj.getString("ID");
+                JSONArray planet = new JSONArray(o);
+                Log.d("a18waqje", planet.get(0).toString());
+
 
                 adapter.clear();
 
                 //JSONArray aProperty = obj.getJSONArray("properties");
-                for (int i = 0; i < mountains.length(); i++) {
-                    Log.d("a18waqje", "" + mountains.length());
+                for (int i = 0; i < planet.length(); i++) {
+                    Log.d("a18waqje", "" + planet.length());
 
-                    JSONObject ajProperty = mountains.getJSONObject(i);
+                    JSONObject ajProperty = planet.getJSONObject(i);
 
                     String name = (String) ajProperty.get("name");
                     Log.d("a18waqje", name);
+                    String company = ajProperty.getString("company");
                     String location = ajProperty.getString("location");
-                    int height = ajProperty.getInt("size");
-                    Log.d("a18waqje", name + "," + location + "," + height);
-                    adapter.add(new Mountain(name, location, height));
+                    int size = ajProperty.getInt("size");
+                    String auxdata = ajProperty.getString("auxdata");
+                    Log.d("a18waqje", name +"," + company + "," + location + "," + size + "," + auxdata);
+                    adapter.add(new Planets(name, company, location, size, auxdata));
                     Log.d("a18waqje", ajProperty.getString("name"));
 
-
+/*
 
                     my_listview.setAdapter(adapter);
                     my_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -164,32 +156,30 @@ public class MainActivity<adapter> extends AppCompatActivity {
 
                         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-                            Toast.makeText(getApplicationContext(),waqarsBerg.get(position).info(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),adapter.get(position).info(), Toast.LENGTH_SHORT).show();
                         }
                     });
 
 
 
+*/
 
-
-
-                    ArrayAdapter<Mountain> adapter=new ArrayAdapter<Mountain>(getApplicationContext(),R.layout.list_item_textview,R.id.list_item_textview,waqarsBerg);
+/*
+                    ArrayAdapter<Planets> adapter=new ArrayAdapter<Planets>(getApplicationContext(),R.layout.list_item_textview,R.id.list_item_textview);
 
                     ListView my_listview=(ListView) findViewById(R.id.my_listview);
 
                     my_listview.setAdapter(adapter);
-
+*/
                 }
             }
 
-            // Skapa Mountain obj för varje varv
-            // Lägg till nya Mountain oibj i ArrayAdapter
 
 
             catch (Exception e) {
                 Log.e("a18waqje", "E:" + e.getMessage());
             }
-*/
+
         }
     }
 }
