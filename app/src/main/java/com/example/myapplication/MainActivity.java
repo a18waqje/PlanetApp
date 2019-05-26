@@ -1,10 +1,17 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -22,34 +29,101 @@ import java.net.URL;
 
 public class MainActivity<adapter> extends AppCompatActivity {
 
-    private ArrayAdapter<Planets> adapter;
+    public static ArrayAdapter<Planets> adapter;
     ListView my_listview;
 
+    // private String[] Extra_message;
+    //public static final String EXTRA_MESSAGE ="Test";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+      /* WebView webView = new WebView (this);
+        webView =(WebView)findViewById(R.id.webview);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient());
+        webView.loadUrl("file:///android_asset/about.html");
 
+        public void onBackPressed(){
+            if (webView.canGoBack()){
+                webView.goBack();
+            }
+            else {
+                super.onBackPressed();
+            }
+        }
+        */
 
         adapter = new ArrayAdapter<Planets>(this, R.layout.list_item_textview, R.id.list_item_textview);
         my_listview = (ListView) findViewById(R.id.my_listview);
 
         my_listview.setAdapter(adapter);
         my_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
 
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                /* Toast.makeText(getApplicationContext(), waqarsBerg.get(position).info(), Toast.LENGTH_SHORT).show();*/
+                Intent intent = new Intent(getApplicationContext(), secondpage.class);
 
-                Toast.makeText(getApplicationContext(), adapter.getItem(position).info(), Toast.LENGTH_SHORT).show();
+                intent.putExtra("Name" , adapter.getItem(position).toString());
+
+                intent.putExtra( "Location", adapter.getItem(position).getLocation());
+                intent.putExtra( "Type", adapter.getItem(position).getType());
+                intent.putExtra( "Diameter", adapter.getItem(position).getDiameter());
+                intent.putExtra( "Textinfo", adapter.getItem(position).getTextInfo());
+
+
+                startActivity(intent);
+
             }
         });
 
         new FetchData().execute();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu,menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.refresh) {
+            Toast.makeText(this, "The Page is Refreshed", Toast.LENGTH_SHORT).show();
+            Log.d("Waqar_debug", "Refresh pressed!");
+            new FetchData().execute();
+            return true;
+
+
+        } if (id == R.id.settings) {
+            Toast.makeText(this, "Settings not available", Toast.LENGTH_SHORT).show();
+            Log.d("Waqar_debug", "Settings has been pressed");
+            return true;
+        }
+
+        if (id == R.id.about) {
+            Toast.makeText(this, "About \n This App contains information about our Solar system. The purpose of this app is to provide some information about planets to people who are eager to know (students or anyone). All the Information cited from https://en.wikipedia.org/wiki/Solar_System", Toast.LENGTH_LONG).show();
+            Log.d("Waqar_debug", "About has been pressed");
+            return true;
+        }
+
+
+        else {
+            return false;
+
+        }
+
 
 
     }
 
-    private class FetchData extends AsyncTask<Void, Void, String> {
+
+    public static class FetchData extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... params) {
 
@@ -104,13 +178,17 @@ public class MainActivity<adapter> extends AppCompatActivity {
                     try {
                         reader.close();
                     } catch (final IOException e) {
-                        Log.d("a18waqje", "Network error. Closing streamd" + e.getMessage());
+                        Log.d("a18waqje", "Network error. Closing stream" + e.getMessage());
                     }
                 }
                 Log.d("a18waqje", "Finally");
 
             }
         }
+
+
+
+
         @Override
         protected void onPostExecute(String o) {
             super.onPostExecute(o);
@@ -140,37 +218,15 @@ public class MainActivity<adapter> extends AppCompatActivity {
 
                     String name = (String) ajProperty.get("name");
                     Log.d("a18waqje", name);
-                    String company = ajProperty.getString("company");
+                    String type = ajProperty.getString("company");
                     String location = ajProperty.getString("location");
-                    int size = ajProperty.getInt("size");
-                    String auxdata = ajProperty.getString("auxdata");
-                    Log.d("a18waqje", name +"," + company + "," + location + "," + size + "," + auxdata);
-                    adapter.add(new Planets(name, company, location, size, auxdata));
+                    int diameter = ajProperty.getInt("size");
+                    String infoText = ajProperty.getString("auxdata");
+                    Log.d("a18waqje", name +"," + type + "," + location + "," + diameter + "," + infoText);
+                    adapter.add(new Planets(name, type, location, diameter, infoText));
                     Log.d("a18waqje", ajProperty.getString("name"));
 
-/*
 
-                    my_listview.setAdapter(adapter);
-                    my_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-
-                            Toast.makeText(getApplicationContext(),adapter.get(position).info(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-
-
-*/
-
-/*
-                    ArrayAdapter<Planets> adapter=new ArrayAdapter<Planets>(getApplicationContext(),R.layout.list_item_textview,R.id.list_item_textview);
-
-                    ListView my_listview=(ListView) findViewById(R.id.my_listview);
-
-                    my_listview.setAdapter(adapter);
-*/
                 }
             }
 
