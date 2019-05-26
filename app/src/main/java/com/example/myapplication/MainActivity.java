@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+@SuppressWarnings("ALL")
 public class MainActivity<adapter> extends AppCompatActivity {
 
     public static ArrayAdapter<Planets> adapter;
@@ -38,22 +39,15 @@ public class MainActivity<adapter> extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-      /* WebView webView = new WebView (this);
+      WebView webView = new WebView (this);
         webView =(WebView)findViewById(R.id.webview);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl("file:///android_asset/about.html");
 
-        public void onBackPressed(){
-            if (webView.canGoBack()){
-                webView.goBack();
-            }
-            else {
-                super.onBackPressed();
-            }
-        }
-        */
+        
+
 
         adapter = new ArrayAdapter<Planets>(this, R.layout.list_item_textview, R.id.list_item_textview);
         my_listview = (ListView) findViewById(R.id.my_listview);

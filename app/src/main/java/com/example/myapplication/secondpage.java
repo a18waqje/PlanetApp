@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressWarnings("ALL")
 public class secondpage extends AppCompatActivity {
     
 
