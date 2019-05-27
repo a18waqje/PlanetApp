@@ -46,7 +46,7 @@ public class MainActivity<adapter> extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl("file:///android_asset/about.html");
 
-        
+
 
 
         adapter = new ArrayAdapter<Planets>(this, R.layout.list_item_textview, R.id.list_item_textview);
